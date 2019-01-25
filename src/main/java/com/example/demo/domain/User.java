@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 public class User {
     //用户id
-    private Integer userId;
+    private Long userId;
 
     //用户名
     private String name;

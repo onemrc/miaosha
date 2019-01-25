@@ -13,7 +13,21 @@ public enum  StatusCode {
     ERROR("失败",500),
     PHONE_ISHAVE("手机号已被注册",502),
 
-    MIAO_SHA_OVER("秒杀已结束",50001);
+//    秒杀状态
+    MIAO_SHA_OVER("秒杀已结束",5001),
+    MIAO_ORDER_EXIST("秒杀订单已存在，不能重复购买",5002),
+
+//    订单状态
+    ORDER_STATUS_CREATE("新建未支付",3000),
+    ORDER_STATUS_PAY("已支付",3001),
+    ORDER_STATUS_SHIPPED("已发货",3002),
+    ORDER_STATUS_REFUNDED("已退款",3003),
+    ORDER_STATUS_RECEIVED("已收货",3003),
+    ORDER_STATUS_COMPLETED("已完成",3003),
+
+    ;
+
+
 
 
 
