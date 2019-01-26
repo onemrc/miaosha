@@ -4,10 +4,7 @@ import com.example.demo.domain.MiaoShaOrder;
 import com.example.demo.domain.OrderInfo;
 import com.example.demo.domain.User;
 import com.example.demo.eums.StatusCode;
-import com.example.demo.service.GoodsService;
-import com.example.demo.service.OrderService;
-import com.example.demo.service.RedisService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.*;
 import com.example.demo.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,14 +22,15 @@ public class MiaoShaController {
     private final UserService userService;
     private final RedisService redisService;
     private final GoodsService goodsService;
-
+    private final MiaoShaService miaoShaService;
     private final OrderService orderService;
 
     @Autowired
-    public MiaoShaController(UserService userService, RedisService redisService, GoodsService goodsService, OrderService orderService) {
+    public MiaoShaController(UserService userService, RedisService redisService, GoodsService goodsService, MiaoShaService miaoShaService, OrderService orderService) {
         this.userService = userService;
         this.redisService = redisService;
         this.goodsService = goodsService;
+        this.miaoShaService = miaoShaService;
         this.orderService = orderService;
     }
 
@@ -42,7 +40,7 @@ public class MiaoShaController {
                             @RequestParam("goodsId") long goodsId){
         model.addAttribute("user",user);
         if (user == null){
-            return "to_login";
+            return "login";
         }
 
         //秒杀商品信息
@@ -64,7 +62,7 @@ public class MiaoShaController {
         }
 
         //减库存，下订单 写入秒杀订单
-        OrderInfo orderInfo = orderService.createOrder(user,goodsVo);
+        OrderInfo orderInfo = miaoShaService.miaosha(user,goodsVo);
         model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goodsVo);
 

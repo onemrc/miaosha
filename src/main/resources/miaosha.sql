@@ -52,13 +52,14 @@ CREATE TABLE  order_info
   order_id              int(18)			NOT NULL	AUTO_INCREMENT,
 	goods_id				int(18)			NOT NULL,
 	user_id				int(18)			NOT NULL,
+	goods_name			varchar(64)		NOT NULL 	COMMENT'商品名称',
 	goods_price			decimal (10,2)	NOT NULL 	COMMENT'价格',
   address   varchar(124)		NOT NULL 	COMMENT'收货地址',
   goods_count int (19) NOT NULL 	COMMENT'商品数量',
-  status int(3) default '0' COMMENT'订单状态，0新建未支付，1已支付，2已发货，3已退款，4已收货，5已完成'
+  status int(3) default '0' COMMENT'订单状态，0新建未支付，1已支付，2已发货，3已退款，4已收货，5已完成',
   create_date timestamp NOT NULL 	COMMENT'创建时间',
-  pay_date timestamp NOT NULL 	COMMENT'支付时间',
-	PRIMARY KEY (id)
+  pay_date timestamp  	COMMENT'支付时间',
+	PRIMARY KEY (order_id)
 )ENGINE=InnoDB;
 
 -- 记录秒杀订单信息

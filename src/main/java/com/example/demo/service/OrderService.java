@@ -38,6 +38,7 @@ public class OrderService {
         orderInfo.setGoodsName(goodsVo.getGoodsName());
         orderInfo.setStatus(StatusCode.ORDER_STATUS_CREATE.getCode());
         orderInfo.setUserId(user.getUserId());
+//        orderInfo.setOrderChannel(0);
 
         long orderId = orderDao.insert(orderInfo);
 

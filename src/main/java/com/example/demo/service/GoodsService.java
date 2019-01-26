@@ -26,9 +26,12 @@ public class GoodsService {
         return goodsDao.getGoodsVoByGoodsId(goodsId);
     }
 
-//    public void reduceStock(GoodsVo goods) {
-//        MiaoShaGoods g = new MiaoShaGoods();
-//        g.setGoodsId(goods.get());
-//        goodsDao.reduceStock(g);
-//    }
+    /*
+    减库存
+     */
+    public void reduceStock(GoodsVo goods) {
+        MiaoShaGoods g = new MiaoShaGoods();
+        g.setGoodsId(goods.getGoodsId());
+        goodsDao.reduceStock(g);
+    }
 }
