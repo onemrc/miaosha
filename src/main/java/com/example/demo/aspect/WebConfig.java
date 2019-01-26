@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * create by: one
  * create time:2019/1/25 14:26
- * 描述：
+ * 描述：Web配置
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
