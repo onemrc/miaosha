@@ -6,4 +6,4 @@
 
 业务模块组成：登陆、注册 + 秒杀商品列表页 + 秒杀商品详情页 + 订单详情页
 
-![Mou icon](https://github.com/onemrc/miaosha/blob/master/images/%E6%B3%A8%E5%86%8C.PNG =200x300)
+<img src="https://github.com/onemrc/miaosha/blob/master/images/%E6%B3%A8%E5%86%8C.PNG" width="500" hegiht="313" align=center />
