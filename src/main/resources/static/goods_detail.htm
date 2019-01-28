@@ -72,8 +72,9 @@
                 goodsId:$("#goodsId").val(),
             },
             success:function(data){
-                if(data.code == 0){
-                    var result = data.data;
+                data = $.parseJSON(data);
+                if(data.code === 200){
+                    var result = data.msg;
                     if(result < 0){
                         layer.msg("对不起，秒杀失败");
                     }else if(result == 0){//继续轮询
@@ -83,7 +84,7 @@
                     }else{
                         layer.confirm("恭喜你，秒杀成功！查看订单？", {btn:["确定","取消"]},
                             function(){
-                                window.location.href="/order_detail.htm?orderId="+result;
+                                window.location.href="order_detail.htm?orderId="+result;
                             },
                             function(){
                                 layer.closeAll();
@@ -101,17 +102,23 @@
 
     function doMiaosha(){
         $.ajax({
-            url:"/miaosha/do_miaosha",
+            url:"do_miaosha",
             type:"POST",
             data:{
                 goodsId:$("#goodsId").val(),
             },
             success:function(data){
-                if(data.code == 0){
+                console.log(data);
+                data = $.parseJSON(data);
+
+                if(data.code === 200){
                     //window.location.href="/order_detail.htm?orderId="+data.data.id;
                     getMiaoshaResult($("#goodsId").val());
                 }else{
                     layer.msg(data.msg);
+                    if (data.code === 999){
+                        window.location.href = "to_login";
+                    }
                 }
             },
             error:function(){
@@ -133,7 +140,7 @@
         $("#goodsImg").attr("src", goods.goodsImg);
         $("#startTime").text(new Date(goods.startDate).format("yyyy-MM-dd hh:mm:ss"));
         $("#remainSeconds").val(remainSeconds);
-        $("#goodsId").val(goods.id);
+        $("#goodsId").val(goods.goodsId);
         $("#goodsPrice").text(goods.goodsPrice);
         $("#miaoshaPrice").text(goods.miaoshaPrice);
         $("#stockCount").text(goods.stockCount);
@@ -152,8 +159,8 @@
             type:"GET",
             success:function(data){
                 data = $.parseJSON(data);
-                // console.log(data);
-                if(data.code == 200){
+                console.log(data);
+                if(data.code === 200){
                     render(data.data);
                 }else{
                     layer.msg(data.msg);

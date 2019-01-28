@@ -12,10 +12,12 @@ public enum  StatusCode {
     SUCCESS("成功",200),
     ERROR("失败",500),
     PHONE_ISHAVE("手机号已被注册",502),
+    NO_LOGIN("未登录",999),
 
 //    秒杀状态
     MIAO_SHA_OVER("秒杀已结束",5001),
     MIAO_ORDER_EXIST("秒杀订单已存在，不能重复购买",5002),
+
 
 //    订单状态
     ORDER_STATUS_CREATE("新建未支付",3000),

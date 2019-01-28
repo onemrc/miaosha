@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dao.GoodsDao;
 import com.example.demo.dao.OrderDao;
+import com.example.demo.domain.MiaoShaOrder;
 import com.example.demo.domain.OrderInfo;
 import com.example.demo.domain.User;
 import com.example.demo.vo.GoodsVo;
@@ -33,9 +34,29 @@ public class MiaoShaService {
     @Transactional
     public OrderInfo miaosha(User user, GoodsVo goodsVo) {
         //减库存
-        goodsService.reduceStock(goodsVo);
+        boolean reduceResult = goodsService.reduceStock(goodsVo);
+        if (reduceResult){//下订单
+            orderService.createOrder(user, goodsVo);
+        }
+        return null;
+    }
 
-        //下订单
-       return  orderService.createOrder(user, goodsVo);
+    /**
+     * 获取秒杀结果
+     */
+    public long getMiaoshaResult(Long userId, long goodsId) {
+        MiaoShaOrder order = orderService.getMiaoshaOrderByUserIdGoodsId(userId, goodsId);
+        if(order != null) {//秒杀成功
+            return order.getOrderId();
+        }
+//        else {
+//            boolean isOver = getGoodsOver(goodsId);
+//            if(isOver) {
+//                return -1;
+//            }else {
+//                return 0;
+//            }
+//        }
+        return -1;
     }
 }
