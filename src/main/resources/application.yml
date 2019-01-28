@@ -7,7 +7,6 @@ server:
 #  url的前缀
 #  servlet:
 #    context-path: /wenda
-#
 mybatis:
   configuration:
     default-statement-timeout: 3000
@@ -16,8 +15,6 @@ mybatis:
     cache-enabled: true
 
 
-
-#
 # mysql
 spring:
   datasource:
@@ -30,11 +27,8 @@ spring:
 
 
 
-  #  freemarker config
-  #  freemarker:
-  #    suffix: .html
-  #
-  ## redis
+
+# redis
   redis:
 #    host: 47.106.215.221
     host: 127.0.0.1
