@@ -126,6 +126,22 @@ public class RedisService {
         }
     }
 
+    /*
+    set的时候给一个过期时间
+     */
+    public Long set(String key, String value,final int seconds){
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+
+            jedis.set(key,value);
+
+            return jedis.expire(key,seconds);
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
 
 //    /*
 //    判断key是否存在

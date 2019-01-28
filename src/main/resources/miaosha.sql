@@ -1,3 +1,5 @@
+create database miaosha;
+
 -- 记录用户个人信息
 CREATE TABLE  user
 (
@@ -31,6 +33,9 @@ CREATE TABLE  goods
 
 	PRIMARY KEY (goods_id)
 )ENGINE=InnoDB;
+
+insert into goods(goods_name,goods_title,goods_img,goods_detail,goods_price,goods_stock) value ('Apple iPhone XR ','Apple iPhone XR (A2108) 64GB 黑色 移动联通电信4G手机 双卡双待','http://47.106.215.221/images/miaosha/ipx.jpg','分辨率：1792*828、
+后置摄像头：1200万像素、前置摄像头：700万像素',5699.00,50);
 
 -- 记录参与秒杀的商品信息
 CREATE TABLE  miaosha_goods
@@ -73,3 +78,5 @@ CREATE TABLE  miaosha_order
 
 	PRIMARY KEY (id)
 )ENGINE=InnoDB;
+
+

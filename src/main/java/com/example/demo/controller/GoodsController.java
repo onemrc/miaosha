@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import com.alibaba.druid.util.StringUtils;
 import com.example.demo.domain.User;
+import com.example.demo.redis.RedisKeys;
 import com.example.demo.service.GoodsService;
+import com.example.demo.service.RedisService;
 import com.example.demo.vo.GoodsVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -25,24 +33,77 @@ public class GoodsController {
 
     private final GoodsService goodsService;
 
+    private final RedisService redisService;
+
+    private final ThymeleafViewResolver thymeleafViewResolver;
+
     @Autowired
-    public GoodsController(GoodsService goodsService) {
+    public GoodsController(GoodsService goodsService, RedisService redisService, ThymeleafViewResolver thymeleafViewResolver) {
         this.goodsService = goodsService;
+        this.redisService = redisService;
+        this.thymeleafViewResolver = thymeleafViewResolver;
     }
 
-    @RequestMapping(value="/to_list")
-    public String list(Model model, User user) {
+    /**
+     * 并发量 1000
+     * QPS : 188
+     */
+//    @RequestMapping(value="/to_list")
+//    public String list(Model model, User user) {
+//        model.addAttribute("user", user);
+//        List<GoodsVo> goodsList = goodsService.listGoodsVo();
+//        model.addAttribute("goodsList", goodsList);
+//        return "goods_list";
+//    }
+
+    /**
+     * 进行页面缓存处理
+     * 并发量 1000
+     * QPS ：254.8
+     */
+    @RequestMapping(value="/to_list",produces = "text/html")
+    @ResponseBody
+    public String list(Model model, User user,
+                       HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("user", user);
+
+        //取缓存
+        String html = redisService.get(RedisKeys.getGoodslist());
+        if (!StringUtils.isEmpty(html)){
+//            logger.info("取goods_list 缓存");
+            return html;
+        }
+
+        //没有缓存就手动渲染
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
-        return "goods_list";
+
+
+        WebContext webContext = new WebContext(request,response,request.getServletContext(),request.getLocale(),model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_list",webContext);
+        if (!StringUtils.isEmpty(html)){
+            redisService.set(RedisKeys.getGoodslist(),html,RedisKeys.CACHE_EXPIRE_DATE);
+        }
+//        logger.info("手动渲染goods_list");
+        return html;
     }
 
+
+
     @RequestMapping("/to_detail/{goodsId}")
+    @ResponseBody
     public String detail(Model model,User user,
-                         @PathVariable("goodsId")long goodsId) {
+                         @PathVariable("goodsId")long goodsId,
+                         HttpServletRequest request, HttpServletResponse response) {
         model.addAttribute("user", user);
 
+        //取缓存
+        String html = redisService.get(RedisKeys.getGoodsDetail(goodsId));
+        if (!StringUtils.isEmpty(html)){
+            return html;
+        }
+
+        //手动渲染
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
 
@@ -64,6 +125,13 @@ public class GoodsController {
         }
         model.addAttribute("miaoshaStatus", miaoshaStatus);
         model.addAttribute("remainSeconds", remainSeconds);
-        return "goods_detail";
+//        return "goods_detail";
+
+        WebContext webContext = new WebContext(request,response,request.getServletContext(),request.getLocale(),model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_detail",webContext);
+        if (!StringUtils.isEmpty(html)){
+            redisService.set(RedisKeys.getGoodsDetail(goodsId),html,RedisKeys.CACHE_EXPIRE_DATE);
+        }
+        return html;
     }
 }
